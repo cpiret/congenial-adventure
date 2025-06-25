@@ -14,6 +14,11 @@
     - name: Display current Proxmox version
       debug:
         msg: "Current Proxmox version is: {{ pve_version.stdout }}"
+        
+    - name: Désactiver temporairement la vérification des signatures APT
+      lineinfile:
+        path: /etc/apt/apt.conf.d/99norequire
+        line: 'APT::Get::AllowUnauthenticated "true";'
 
     - name: Update all packages
       apt:
