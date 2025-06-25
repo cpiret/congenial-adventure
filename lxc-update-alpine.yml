@@ -1,0 +1,28 @@
+- name: Update Alpine LXC container
+  hosts: all
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: Ensure Python is installed (if required)
+      raw: apk add --no-cache python3 || true
+
+    - name: Install Python pip (if required)
+      raw: apk add --no-cache py3-pip || true
+
+    - name: Ensure APK cache is up to date
+      raw: apk update
+
+    - name: Upgrade all installed packages
+      raw: apk upgrade --available
+
+    - name: Clean APK cache
+      raw: apk cache clean
+
+    - name: Verify system is up to date
+      command: apk info -W | grep -i upgrade
+      register: upgrade_status
+
+    - name: Display upgrade status
+      debug:
+        msg: "{{ upgrade_status.stdout }}"
