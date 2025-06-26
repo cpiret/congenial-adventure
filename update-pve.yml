@@ -1,33 +1,34 @@
-- name: Upgrade Proxmox to version 8.4
+- name: Mise à jour des serveurs sans reboot
   hosts: all
   become: true
 
   tasks:
-    - name: Update APT cache
+    - name: Vérifier si le répertoire /etc/apt/apt.conf.d existe
+      stat:
+        path: /etc/apt/apt.conf.d
+      register: apt_conf_dir
+
+    - name: Créer le répertoire /etc/apt/apt.conf.d si nécessaire
+      file:
+        path: /etc/apt/apt.conf.d
+        state: directory
+      when: not apt_conf_dir.stat.exists
+
+    - name: Désactiver temporairement la vérification des signatures APT
+      copy:
+        dest: /etc/apt/apt.conf.d/99norequire
+        content: |
+          APT::Get::AllowUnauthenticated "true";
+
+    - name: Mettre à jour l'index des paquets
       apt:
         update_cache: yes
 
-    - name: Check current Proxmox version
-      shell: pveversion
-      register: pve_version
-
-    - name: Display current Proxmox version
-      debug:
-        msg: "Current Proxmox version is: {{ pve_version.stdout }}"
-        
-    - name: Désactiver temporairement la vérification des signatures APT
-      lineinfile:
-        path: /etc/apt/apt.conf.d/99norequire
-        line: 'APT::Get::AllowUnauthenticated "true";'
-
-    - name: Update all packages
+    - name: Mettre à jour tous les paquets installés
       apt:
         upgrade: dist
 
-    - name: Clean up unused packages
-      apt:
-        autoclean: yes
-
-    - name: Remove unnecessary packages
-      apt:
-        autoremove: yes
+    - name: Supprimer la configuration temporaire
+      file:
+        path: /etc/apt/apt.conf.d/99norequire
+        state: absent
