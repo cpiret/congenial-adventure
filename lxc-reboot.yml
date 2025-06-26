@@ -1,0 +1,7 @@
+- name: Redémarrage des conteneurs LXC uniquement
+  hosts: all
+  become: true
+  tasks:
+    - name: Redémarrer le conteneur
+      ansible.builtin.command:
+        cmd: reboot
