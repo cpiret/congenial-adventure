@@ -1,21 +1,12 @@
-- name: Update Ubuntu and reboot if needed
+- name: Mise à jour des serveurs sans reboot
   hosts: all
   become: true
 
   tasks:
-    - name: Update apt package index
+    - name: Mettre à jour l'index des paquets
       apt:
         update_cache: yes
 
-    - name: Upgrade all packages
+    - name: Mettre à jour tous les paquets installés
       apt:
         upgrade: dist
-
-    - name: Check if reboot is required
-      stat:
-        path: /var/run/reboot-required
-      register: reboot_required
-
-    - name: Reboot the server if needed
-      reboot:
-      when: reboot_required.stat.exists
