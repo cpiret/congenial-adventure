@@ -4,4 +4,4 @@
   tasks:
     - name: Redémarrer le système
       reboot:
-        reboot_timeout: 30
+        reboot_timeout: 120
