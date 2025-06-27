@@ -1,0 +1,7 @@
+- name: Redémarrer les systèmes Debian 11
+  hosts: debian11
+  become: true
+  tasks:
+    - name: Redémarrer le système
+      reboot:
+        reboot_timeout: 30
