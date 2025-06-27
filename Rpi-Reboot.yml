@@ -1,5 +1,5 @@
 - name: Redémarrer les systèmes Debian 11
-  hosts: debian11
+  hosts: all
   become: true
   tasks:
     - name: Redémarrer le système
