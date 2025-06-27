@@ -1,4 +1,4 @@
-- name: Mettre à jour Debian sans redémarrer
+- name: Mettre à jour Debian et redémarrer
   hosts: all
   become: true
   tasks:
@@ -9,3 +9,7 @@
     - name: Mettre à jour tous les paquets
       apt:
         upgrade: dist
+
+    - name: Redémarrer le système
+      reboot:
+        reboot_timeout: 120
