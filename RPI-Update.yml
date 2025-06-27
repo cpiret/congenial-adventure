@@ -1,0 +1,11 @@
+- name: Mettre à jour Debian sans redémarrer
+  hosts: all
+  become: true
+  tasks:
+    - name: Mettre à jour l'index des paquets
+      apt:
+        update_cache: yes
+
+    - name: Mettre à jour tous les paquets
+      apt:
+        upgrade: dist
