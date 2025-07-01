@@ -2,10 +2,16 @@
   hosts: all
   become: true
   tasks:
-    - name: Redémarrer le conteneur avec timeout
+    - name: Redémarrer le conteneur en arrière-plan
       ansible.builtin.shell:
-        cmd: timeout 120s reboot
+        cmd: nohup reboot &> /dev/null &
+      ignore_errors: true  # Ignore les erreurs de déconnexion
+      async: 1
+      poll: 0
 
-    - name: Attendre 30 secondes pour le redémarrage
-      ansible.builtin.pause:
-        seconds: 120
+    - name: Attendre que les hôtes soient à nouveau disponibles
+      ansible.builtin.wait_for_connection:
+        timeout: 120  # Augmentez si nécessaire
+
+    - name: Vérifier que l'hôte est accessible
+      ansible.builtin.ping:
