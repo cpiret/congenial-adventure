@@ -2,7 +2,10 @@
   hosts: all
   become: true
   tasks:
-    - name: Redémarrer le conteneur
-      ansible.builtin.command:
-        cmd: reboot
-        timeout: 120  # Délai d'expiration en secondes
+    - name: Redémarrer le conteneur avec timeout
+      ansible.builtin.shell:
+        cmd: timeout 120s reboot
+
+    - name: Attendre 30 secondes pour le redémarrage
+      ansible.builtin.pause:
+        seconds: 120
