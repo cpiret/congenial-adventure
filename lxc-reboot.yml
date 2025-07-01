@@ -5,3 +5,4 @@
     - name: Redémarrer le conteneur
       ansible.builtin.command:
         cmd: reboot
+        timeout: 120  # Délai d'expiration en secondes
