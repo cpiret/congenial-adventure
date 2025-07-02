@@ -9,8 +9,5 @@
       register: reboot_required
 
     - name: Redémarrer le serveur si nécessaire
-      reboot:
-        msg: "Redémarrage automatique via Ansible"
-        pre_reboot_delay: 5
-        post_reboot_delay: 30
+      reboot: {}
       when: reboot_required.stat.exists
